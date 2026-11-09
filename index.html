@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>TeaVM test</title></head>
+<body>
+<pre id="out">Starting...</pre>
+<script>
+  const out = document.getElementById("out");
+  const orig = console.log.bind(console);
+  console.log = (...a) => { out.textContent += "\n" + a.join(" "); orig(...a); };
+  window.onerror = (m) => { out.textContent += "\nERROR: " + m; };
+</script>
+<script src="teavm-poc.wasm-runtime.js"></script>
+<script type="module">
+  try {
+    const teavm = await TeaVM.wasmGC.load("teavm-poc.wasm");
+    teavm.exports.main([]);
+  } catch (e) {
+    document.getElementById("out").textContent += "\nERROR: " + e;
+  }
+</script>
+</body>
+</html>
